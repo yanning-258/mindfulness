@@ -1,2 +1,5 @@
 instructions.md
 .env
+__pycache__/
+*.pyc
+*.db
