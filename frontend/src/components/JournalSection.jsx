@@ -35,7 +35,7 @@ export default function JournalSection({ onEntrySubmitted }) {
         </Link>
       </div>
 
-      <div className="flex gap-4 items-start">
+      <div className="flex flex-col sm:flex-row gap-4 items-start">
         {/* Sticky note */}
         <div className="flex-[2]">
           <div
