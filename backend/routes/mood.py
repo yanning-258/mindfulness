@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from datetime import date, timedelta
+from datetime import date as Date, timedelta
+from typing import Optional
 from database import get_db
 from models import MoodLog
 
@@ -13,11 +14,12 @@ STUDENT_ID = 1
 class MoodCreate(BaseModel):
     emoji: str
     mood_label: str
+    date: Optional[str] = None  # ISO string "YYYY-MM-DD", defaults to today if omitted
 
 
 class MoodResponse(BaseModel):
     id: int
-    date: date
+    date: Date
     emoji: str
     mood_label: str
 
@@ -27,10 +29,10 @@ class MoodResponse(BaseModel):
 
 @router.post("", response_model=MoodResponse, status_code=201)
 def log_mood(body: MoodCreate, db: Session = Depends(get_db)):
-    today = date.today()
+    target_date = Date.fromisoformat(body.date) if body.date else Date.today()
     existing = (
         db.query(MoodLog)
-        .filter(MoodLog.student_id == STUDENT_ID, MoodLog.date == today)
+        .filter(MoodLog.student_id == STUDENT_ID, MoodLog.date == target_date)
         .first()
     )
     if existing:
@@ -42,7 +44,7 @@ def log_mood(body: MoodCreate, db: Session = Depends(get_db)):
 
     entry = MoodLog(
         student_id=STUDENT_ID,
-        date=today,
+        date=target_date,
         emoji=body.emoji,
         mood_label=body.mood_label,
     )
@@ -54,7 +56,7 @@ def log_mood(body: MoodCreate, db: Session = Depends(get_db)):
 
 @router.get("", response_model=list[MoodResponse])
 def get_moods(db: Session = Depends(get_db)):
-    week_ago = date.today() - timedelta(days=6)
+    week_ago = Date.today() - timedelta(days=6)
     return (
         db.query(MoodLog)
         .filter(MoodLog.student_id == STUDENT_ID, MoodLog.date >= week_ago)
