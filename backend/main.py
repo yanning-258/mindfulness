@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 from models import Base
-from routes import journal, mood
+from routes import journal, mood, scores
 
 Base.metadata.create_all(bind=engine)
 
@@ -18,6 +18,7 @@ app.add_middleware(
 
 app.include_router(journal.router)
 app.include_router(mood.router)
+app.include_router(scores.router)
 
 
 @app.get("/")
