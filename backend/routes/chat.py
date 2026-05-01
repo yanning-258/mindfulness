@@ -26,7 +26,7 @@ def _get_model():
         raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured")
     genai.configure(api_key=api_key)
     return genai.GenerativeModel(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-2.5-flash",
         system_instruction=SYSTEM_PROMPT,
     )
 
