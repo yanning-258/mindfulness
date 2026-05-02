@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import MoodCircle from './MoodCircle'
 import MoodPickerModal from './MoodPickerModal'
+import API from '../api'
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -19,7 +20,7 @@ export default function MoodTracker() {
   const [activeDate, setActiveDate] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:8000/mood')
+    fetch(`${API}/mood`)
       .then(r => r.json())
       .then(data => {
         const map = {}
@@ -29,7 +30,7 @@ export default function MoodTracker() {
   }, [])
 
   async function handleSave(dateStr, emoji, label) {
-    const res = await fetch('http://localhost:8000/mood', {
+    const res = await fetch(`${API}/mood`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ date: dateStr, emoji, mood_label: label }),

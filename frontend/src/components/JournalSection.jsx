@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import PastEntriesModal from './PastEntriesModal'
+import API from '../api'
 
 export default function JournalSection({ onEntrySubmitted }) {
   const [text, setText] = useState('')
@@ -14,7 +15,7 @@ export default function JournalSection({ onEntrySubmitted }) {
   async function submit() {
     if (!text.trim()) return
     setSaving(true)
-    await fetch('http://localhost:8000/journal', {
+    await fetch(`${API}/journal`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text }),

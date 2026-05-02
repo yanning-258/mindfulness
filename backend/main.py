@@ -6,15 +6,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 from models import Base
 from routes import journal, mood, scores, events, chat
+from seed import seed
 
 Base.metadata.create_all(bind=engine)
+seed()
 
 app = FastAPI(title="MINDfulness API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

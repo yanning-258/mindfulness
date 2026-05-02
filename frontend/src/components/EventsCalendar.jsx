@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import API from '../api'
 
 const DAY_HEADERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -21,7 +22,7 @@ export default function EventsCalendar() {
   const todayStr = now.toISOString().split('T')[0]
 
   useEffect(() => {
-    fetch('http://localhost:8000/events')
+    fetch(`${API}/events`)
       .then(r => r.json())
       .then(setEvents)
       .catch(() => {})

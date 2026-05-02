@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import API from '../api'
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-GB', {
@@ -55,7 +56,7 @@ export default function JournalMore() {
   const [expanded, setExpanded] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:8000/journal')
+    fetch(`${API}/journal`)
       .then(r => r.json())
       .then(data => { setEntries(data); setLoading(false) })
       .catch(() => setLoading(false))

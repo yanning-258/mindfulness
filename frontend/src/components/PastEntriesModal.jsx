@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import API from '../api'
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-GB', {
@@ -16,7 +17,7 @@ export default function PastEntriesModal({ onClose }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('http://localhost:8000/journal')
+    fetch(`${API}/journal`)
       .then(r => r.json())
       .then(data => { setEntries(data); setLoading(false) })
       .catch(() => setLoading(false))

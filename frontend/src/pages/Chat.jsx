@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import API from '../api'
 
 const OPENING = { id: 'open', sender: 'mia', text: 'Hi Angela! How are you today? 😊' }
 
@@ -65,7 +66,7 @@ export default function Chat() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:8000/chat', {
+      const res = await fetch(`${API}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, history }),

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import API from '../api'
 
 const STATUS_STYLES = {
   Normal: 'bg-green-100 text-green-700',
@@ -22,7 +23,7 @@ export default function StatusScore() {
   const [score, setScore] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:8000/scores')
+    fetch(`${API}/scores`)
       .then(r => r.json())
       .then(setScore)
       .catch(() => {})
