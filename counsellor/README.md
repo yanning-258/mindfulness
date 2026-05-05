@@ -10,7 +10,7 @@ This is **Part 3** of a 3-part system. All parts share the same SQLite database 
 |------|-------------|--------|
 | **Student App** | Dashboard, journalling, mood tracking, Mia chatbot | ✅ Done |
 | **Analytics Engine** | Reads journals/moods, writes risk scores | In progress |
-| **Counsellor Dashboard** (this repo) | Views student risk scores, trends, journals | ✅ Done |
+| **Counsellor Dashboard** (this folder) | Views student risk scores, trends, journals | ✅ Done |
 
 ---
 
@@ -24,27 +24,30 @@ This is **Part 3** of a 3-part system. All parts share the same SQLite database 
 
 ## Setup
 
-### 1. Clone into the same parent folder as the student app
+### 1. Clone the repo
+
+```bash
+git clone <repo-url>
+cd mindfulness
+```
 
 This dashboard resolves the shared database via a relative path:
 ```
 mindfulness/
-├── backend/                ← student app backend (owns mindfulness.db)
-├── frontend/               ← student app frontend
-└── counsellor-dashboard/   ← this repo
+├── student/       ← student app (owns mindfulness.db)
+└── counsellor/    ← this app
 ```
 
 ### 2. Install backend dependencies
 
 ```bash
-cd counsellor-dashboard
-pip install -r requirements.txt
+pip install -r counsellor/requirements.txt
 ```
 
 ### 3. Install frontend dependencies
 
 ```bash
-cd counsellor-dashboard/frontend
+cd counsellor/frontend
 npm install
 ```
 
@@ -56,7 +59,7 @@ The counsellor backend runs on **port 8001** and the frontend on **port 5174** s
 
 **Terminal 1 — Counsellor backend**
 ```bash
-cd counsellor-dashboard/backend
+cd counsellor/backend
 python -m uvicorn main:app --port 8001 --reload
 ```
 
@@ -69,7 +72,7 @@ On first start, the backend automatically:
 
 **Terminal 2 — Counsellor frontend**
 ```bash
-cd counsellor-dashboard/frontend
+cd counsellor/frontend
 npm run dev
 ```
 
@@ -115,11 +118,11 @@ Interactive docs available at **http://localhost:8001/docs**.
 ## Project Structure
 
 ```
-counsellor-dashboard/
+counsellor/
 ├── requirements.txt
 ├── backend/
 │   ├── main.py           # FastAPI app, CORS, auto-seed on startup
-│   ├── database.py       # Points to shared ../../backend/mindfulness.db
+│   ├── database.py       # Points to shared ../../student/backend/mindfulness.db
 │   ├── models.py         # SQLAlchemy models (read-only, matches student app schema)
 │   ├── seed.py           # Seeds counsellor-specific data (safe to re-run)
 │   └── routes/
