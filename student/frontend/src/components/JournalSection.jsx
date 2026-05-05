@@ -28,7 +28,7 @@ export default function JournalSection({ onEntrySubmitted }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 h-full">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-base font-semibold text-gray-700">My Journal</h2>
         <Link to="/journal-more" className="text-sm font-medium text-pink-500 hover:text-pink-600">

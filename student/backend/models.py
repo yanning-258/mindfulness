@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, Date, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, DateTime, Date, Boolean, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -18,6 +18,7 @@ class Student(Base):
     mood_logs = relationship("MoodLog", back_populates="student")
     risk_scores = relationship("RiskScore", back_populates="student")
     chat_logs = relationship("ChatLog", back_populates="student")
+    users = relationship("User", back_populates="student")
 
 
 class JournalEntry(Base):
@@ -81,3 +82,16 @@ class ChatLog(Base):
     timestamp = Column(DateTime, nullable=False)
 
     student = relationship("Student", back_populates="chat_logs")
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    student_id = Column(Integer, ForeignKey("students.id"), nullable=False)
+    has_completed_quiz = Column(Boolean, default=False)
+    mindtype_code = Column(String, nullable=True)
+
+    student = relationship("Student", back_populates="users")

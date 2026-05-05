@@ -10,6 +10,9 @@ export default defineConfig({
       '/events':  'http://localhost:8000',
       '/scores':  'http://localhost:8000',
       '/chat':    'http://localhost:8000',
+      '/auth':    'http://localhost:8000',
+      '/quiz':    'http://localhost:8000',
+      '/streak':  'http://localhost:8000',
     },
   },
 })

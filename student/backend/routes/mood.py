@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import date as Date, timedelta
 from typing import Optional
 from database import get_db
-from models import MoodLog
+from models import MoodLog, JournalEntry
 
 router = APIRouter(prefix="/mood", tags=["mood"])
 
@@ -63,3 +63,25 @@ def get_moods(db: Session = Depends(get_db)):
         .order_by(MoodLog.date.asc())
         .all()
     )
+
+
+@router.get("/streak")
+def get_streak(db: Session = Depends(get_db)):
+    today = Date.today()
+    streak = 0
+    current = today
+    while True:
+        has_mood = db.query(MoodLog).filter(
+            MoodLog.student_id == STUDENT_ID,
+            MoodLog.date == current,
+        ).first() is not None
+        has_journal = db.query(JournalEntry).filter(
+            JournalEntry.student_id == STUDENT_ID,
+            JournalEntry.timestamp >= current,
+            JournalEntry.timestamp < current + timedelta(days=1),
+        ).first() is not None
+        if not has_mood and not has_journal:
+            break
+        streak += 1
+        current -= timedelta(days=1)
+    return {"streak": streak}
