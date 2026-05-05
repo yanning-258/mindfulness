@@ -35,6 +35,7 @@ export default function MoodTracker() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ date: dateStr, emoji, mood_label: label }),
     })
+    if (!res.ok) { setActiveDate(null); return }
     const saved = await res.json()
     setMoodMap(prev => ({ ...prev, [dateStr]: saved }))
     setActiveDate(null)

@@ -1,38 +1,27 @@
 # MINDfulness — Student Well-being App
 
-Student-facing web application for the MINDfulness university mental health platform. Built for Imperial College London.
+Student-facing web application for the MINDfulness university mental health platform, built for Imperial College London.
 
 ## System Overview
 
-This is **Part 1** of a 3-part system:
+This is **Part 1** of a 3-part system. All three parts share a single SQLite database (`mindfulness.db`) as the integration point.
 
 | Part | Description | Status |
 |------|-------------|--------|
-| **Student App** (this repo) | Dashboard, journaling, mood tracking, Mia chatbot, events | ✅ Built |
-| Analytics Engine | Reads journals, runs ML models, writes risk scores to DB | teammate |
-| Counsellor Dashboard | Views student risk scores and trends | teammate |
-
-The shared SQLite database (`mindfulness.db`) is the integration point between all three parts.
+| **Student App** (this repo) | Dashboard, journalling, mood tracking, Mia chatbot, events calendar | ✅ Done |
+| **Analytics Engine** | Reads journal/mood data, runs models, writes risk scores to DB | In progress |
+| **Counsellor Dashboard** | Views student risk scores and trends | In progress |
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** React 18 + Tailwind CSS 3 + Vite
-- **Backend:** Python FastAPI + Uvicorn
-- **Database:** SQLite via SQLAlchemy ORM
-- **AI Chatbot:** Google Gemini API (`gemini-2.5-flash`)
-
----
-
-## Features
-
-- **Single-page dashboard** — everything visible at once, no nav clutter
-- **Events calendar** — monthly grid with colour-coded event dots and click-to-view popups
-- **Mood tracker** — 7-day emoji strip, click any day to log or change mood via modal picker
-- **Journal** — yellow sticky-note textarea, past entries modal, full journal history page with stats
-- **Status score card** — reads PHQ-9, GAD-7, suicidal risk scores written by the analytics engine
-- **Chat with Mia** — full-page Gemini-powered mental health chatbot with conversation history
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19 + Tailwind CSS 3 + Vite 8 |
+| Backend | Python FastAPI + Uvicorn |
+| Database | SQLite via SQLAlchemy ORM |
+| AI Chatbot | Google Gemini API (`gemini-2.5-flash`) |
 
 ---
 
@@ -40,7 +29,7 @@ The shared SQLite database (`mindfulness.db`) is the integration point between a
 
 - Python 3.11+
 - Node.js 18+
-- A Google Gemini API key ([aistudio.google.com](https://aistudio.google.com))
+- A free Google Gemini API key — [aistudio.google.com](https://aistudio.google.com)
 
 ---
 
@@ -49,82 +38,55 @@ The shared SQLite database (`mindfulness.db`) is the integration point between a
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yanning-258/mindfulness.git
+git clone <repo-url>
 cd mindfulness
 ```
 
-### 2. Backend
+### 2. Environment variables
 
 ```bash
-cd backend
-pip install -r ../requirements.txt
-python seed.py        # creates mindfulness.db and seeds Angela + events + risk score
+cp .env.example .env
 ```
 
-### 3. Environment variables
+Open `.env` and replace `your_gemini_api_key_here` with your actual key. The chat feature (Mia) won't work without it, but the rest of the app will.
 
-Create a `.env` file in the project root:
+### 3. Install backend dependencies
 
+```bash
+pip install -r requirements.txt
 ```
-GEMINI_API_KEY=your_gemini_api_key_here
-```
 
-### 4. Frontend
+### 4. Install frontend dependencies
 
 ```bash
 cd frontend
 npm install
+cd ..
 ```
 
 ---
 
 ## Running Locally
 
-Open **two terminals**:
+Open **two terminals** from the project root:
 
-**Terminal 1 — Backend:**
+**Terminal 1 — Backend**
 ```bash
 cd backend
 python -m uvicorn main:app --port 8000 --reload
 ```
 
-**Terminal 2 — Frontend:**
+The first run automatically creates `mindfulness.db` and seeds it with demo data (Angela Beckett, 5 events, sample risk scores).
+
+**Terminal 2 — Frontend**
 ```bash
 cd frontend
 npm run dev
 ```
 
-Then open **http://localhost:5173** in your browser.
+Open **http://localhost:5173** in your browser.
 
----
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Health check |
-| GET | `/scores` | Latest risk score for Angela |
-| POST | `/journal` | Save a new journal entry |
-| GET | `/journal` | All journal entries, newest first |
-| POST | `/mood` | Log or update mood for a specific date |
-| GET | `/mood` | Mood logs for the past 7 days |
-| GET | `/events` | All upcoming mental health events |
-| POST | `/chat` | Send message to Mia (Gemini), get reply |
-
----
-
-## Database Schema
-
-Shared with teammates — do not rename or remove columns.
-
-| Table | Written by | Read by |
-|-------|-----------|---------|
-| `students` | seed.py | all parts |
-| `journal_entries` | student app | analytics engine |
-| `mood_logs` | student app | student app |
-| `risk_scores` | analytics engine | student app, dashboard |
-| `events` | seed.py | student app |
-| `chat_logs` | student app | student app |
+> The Vite dev server proxies all API requests to `http://localhost:8000`, so no extra environment variables are needed for local development.
 
 ---
 
@@ -132,54 +94,95 @@ Shared with teammates — do not rename or remove columns.
 
 ```
 mindfulness/
+├── .env                    # Your secrets (gitignored — copy from .env.example)
+├── .env.example            # Template — commit this, not .env
+├── requirements.txt        # Python dependencies
 ├── backend/
-│   ├── main.py          # FastAPI app + CORS + router registration
-│   ├── database.py      # SQLite engine + session factory
-│   ├── models.py        # SQLAlchemy models for all 6 tables
-│   ├── seed.py          # Creates DB and inserts demo data
+│   ├── main.py             # FastAPI app, CORS, router registration, auto-seed on startup
+│   ├── database.py         # SQLite engine and session factory
+│   ├── models.py           # SQLAlchemy models (6 tables)
+│   ├── seed.py             # Creates DB and inserts demo data (safe to re-run)
 │   └── routes/
-│       ├── journal.py
-│       ├── mood.py
-│       ├── scores.py
-│       ├── events.py
-│       └── chat.py      # Gemini API integration
-├── frontend/
-│   └── src/
-│       ├── pages/
-│       │   ├── Home.jsx          # Main dashboard
-│       │   ├── Chat.jsx          # Full-page Mia chat
-│       │   ├── JournalMore.jsx   # Journal history + stats
-│       │   └── MoodStats.jsx     # Mood stats (placeholder)
-│       └── components/
-│           ├── Header.jsx
-│           ├── EventsCalendar.jsx
-│           ├── MoodTracker.jsx
-│           ├── MoodCircle.jsx
-│           ├── MoodPickerModal.jsx
-│           ├── JournalSection.jsx
-│           ├── PastEntriesModal.jsx
-│           ├── DailyQuote.jsx
-│           └── StatusScore.jsx
-├── .env                 # GEMINI_API_KEY (not committed)
-├── requirements.txt
-└── README.md
+│       ├── journal.py      # POST /journal, GET /journal
+│       ├── mood.py         # POST /mood, GET /mood
+│       ├── scores.py       # GET /scores
+│       ├── events.py       # GET /events
+│       └── chat.py         # POST /chat — Gemini integration
+└── frontend/
+    ├── vite.config.js      # Vite + dev proxy config
+    └── src/
+        ├── api.js          # API base URL (empty = relative, proxied by Vite)
+        ├── pages/
+        │   ├── Home.jsx            # Main dashboard
+        │   ├── Chat.jsx            # Full-page Mia chatbot
+        │   ├── JournalMore.jsx     # Journal history + stats
+        │   └── MoodStats.jsx       # Placeholder
+        └── components/
+            ├── Header.jsx
+            ├── EventsCalendar.jsx
+            ├── MoodTracker.jsx
+            ├── MoodPickerModal.jsx
+            ├── MoodCircle.jsx
+            ├── JournalSection.jsx
+            ├── PastEntriesModal.jsx
+            ├── DailyQuote.jsx
+            └── StatusScore.jsx
 ```
 
 ---
 
-## Demo Student
+## API Endpoints
 
-The app is hardcoded to demo student **Angela Beckett** (student_id = 1):
+Base URL: `http://localhost:8000`
 
-- Email: angela.beckett@imperial.ac.uk
-- University: Imperial College London
-- Major: Business Analytics (Postgraduate)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Health check |
+| GET | `/scores` | Latest PHQ-9, GAD-7, and suicidal risk scores |
+| POST | `/journal` | Save a journal entry — body: `{ text }` |
+| GET | `/journal` | All journal entries, newest first |
+| POST | `/mood` | Log or update mood — body: `{ emoji, mood_label, date? }` |
+| GET | `/mood` | Mood logs for the past 7 days |
+| GET | `/events` | All seeded events, sorted by date |
+| POST | `/chat` | Send message to Mia — body: `{ message, history? }` |
+
+FastAPI auto-generates interactive docs at **http://localhost:8000/docs**.
+
+---
+
+## Database Schema
+
+Shared with the analytics engine and counsellor dashboard — do not rename or remove columns without coordinating with the team.
+
+| Table | Written by | Read by |
+|-------|-----------|---------|
+| `students` | `seed.py` | all parts |
+| `journal_entries` | student app | analytics engine |
+| `mood_logs` | student app | student app |
+| `risk_scores` | analytics engine | student app, counsellor dashboard |
+| `events` | `seed.py` | student app |
+| `chat_logs` | student app | student app |
+
+---
+
+## Demo Data
+
+The seed script loads one demo student:
+
+| Field | Value |
+|-------|-------|
+| Name | Angela Beckett |
+| Email | angela.beckett@imperial.ac.uk |
+| University | Imperial College London |
+| Major | Business Analytics (Postgraduate Masters) |
+
+All API endpoints are currently hardcoded to `student_id = 1` (Angela). Authentication is not implemented yet.
 
 ---
 
 ## Notes
 
-- `mindfulness.db` is gitignored — run `python seed.py` after cloning
-- `.env` is gitignored — add your Gemini API key manually
-- Risk scores are seeded for the prototype; in production the analytics engine writes them
-- Chat history is kept in React state only — it resets on page refresh (by design for prototype)
+- `mindfulness.db` is gitignored. It is created automatically when the backend starts for the first time.
+- `.env` is gitignored. Always copy from `.env.example`.
+- Risk scores in the seeded DB are placeholder values (`PHQ-9=15, GAD-7=5, Suicidal=60`). In the full system, the analytics engine overwrites these.
+- Chat history lives in React state only and resets on page refresh — intentional for the prototype.

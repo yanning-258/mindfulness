@@ -23,8 +23,11 @@ export default function MoodPickerModal({ dateStr, onSave, onClose }) {
 
   async function handlePick(emoji, label) {
     setSaving(true)
-    await onSave(dateStr, emoji, label)
-    setSaving(false)
+    try {
+      await onSave(dateStr, emoji, label)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
