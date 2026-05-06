@@ -71,6 +71,14 @@ def seed():
                     venue="Business School Atrium",
                     description="Expert talk on maintaining healthy sleep routines during exam season.",
                 ),
+                Event(
+                    title="Preventing Burnout Workshop",
+                    date=date(2026, 5, 14),
+                    time="17:00 – 18:15",
+                    venue="Online",
+                    description="Practical strategies to recognise and prevent burnout during high-pressure periods.",
+                    registration_url="https://www.eventbrite.co.uk/e/preventing-burn-out-online-workshop-tickets-1985445201043?aff=oddtdtcreator",
+                ),
             ]
             db.add_all(events)
             db.commit()

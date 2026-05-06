@@ -6,9 +6,9 @@ import EventsCalendar from '../components/EventsCalendar'
 import MoodTracker from '../components/MoodTracker'
 import JournalSection from '../components/JournalSection'
 import StatusScore from '../components/StatusScore'
-import PersonalityCard from '../components/PersonalityCard'
 import StreakCounter from '../components/StreakCounter'
-import WardrobePanel from '../components/WardrobePanel'
+import identityBanner from '../assets/404_horizontal.png'
+import chatWithMia from '../assets/chat_with_mia.png'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -39,23 +39,28 @@ export default function Home() {
       {/* LAYER 1 */}
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
         <div className="flex-[3]">
-          <PersonalityCard mindtype={mindtype} />
+          <img
+            src={identityBanner}
+            alt="MINDtype identity"
+            className="w-full h-full object-cover rounded-2xl shadow-sm border border-gray-100"
+          />
         </div>
 
         <div className="flex-[2] flex flex-col gap-4">
           <StreakCounter streak={streak} />
 
-          <div
-            className="bg-white rounded-2xl shadow-sm border p-5 flex flex-col items-center gap-3 cursor-pointer hover:shadow-md transition-shadow"
+          <button
             onClick={() => navigate('/chat')}
+            className="block w-full p-0 border-0 bg-transparent cursor-pointer hover:opacity-90 transition-opacity"
+            aria-label="Chat with Mia"
           >
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-pink-200 to-purple-200 flex items-center justify-center text-4xl animate-pulse">
-              {mindtype ? mindtype.emoji : '🐾'}
-            </div>
-            <p className="text-sm font-medium text-pink-500">Chat with Mia!</p>
-          </div>
+            <img
+              src={chatWithMia}
+              alt="Chat with Mia"
+              className="w-full h-auto rounded-2xl shadow-sm"
+            />
+          </button>
 
-          <WardrobePanel streak={streak} />
         </div>
       </div>
 

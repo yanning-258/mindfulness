@@ -70,6 +70,7 @@ class Event(Base):
     time = Column(String)
     venue = Column(String)
     description = Column(Text)
+    registration_url = Column(String)
 
 
 class ChatLog(Base):

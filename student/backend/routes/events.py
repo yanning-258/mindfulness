@@ -16,6 +16,7 @@ class EventResponse(BaseModel):
     time: str
     venue: str
     description: Optional[str] = None
+    registration_url: Optional[str] = None
 
     class Config:
         from_attributes = True

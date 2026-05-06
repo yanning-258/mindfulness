@@ -118,6 +118,16 @@ export default function EventsCalendar() {
                   {event.description && (
                     <p className="text-xs text-gray-400 mt-1 leading-snug">{event.description}</p>
                   )}
+                  {event.registration_url && (
+                    <a
+                      href={event.registration_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block text-xs font-semibold text-white bg-purple-500 hover:bg-purple-600 rounded-md px-2.5 py-1.5"
+                    >
+                      Register →
+                    </a>
+                  )}
                 </div>
               )}
             </div>
