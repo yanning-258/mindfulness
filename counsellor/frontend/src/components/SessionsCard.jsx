@@ -20,6 +20,7 @@ export default function SessionsCard() {
       <table className="w-full text-sm min-w-[320px]">
         <thead>
           <tr className="text-left border-b border-gray-100">
+            <th className="pb-2 font-medium text-gray-400">Student</th>
             <th className="pb-2 font-medium text-gray-400">Date &amp; Time</th>
             <th className="pb-2 font-medium text-gray-400">Venue</th>
             <th className="pb-2"></th>
@@ -28,6 +29,7 @@ export default function SessionsCard() {
         <tbody>
           {sessions.map((s, i) => (
             <tr key={i} className="border-b border-gray-50 last:border-0">
+              <td className="py-3 text-gray-800 font-medium">{s.student_name}</td>
               <td className="py-3 text-gray-700">{s.date} · {s.time}</td>
               <td className="py-3 text-gray-700">{s.venue}</td>
               <td className="py-3 text-right">

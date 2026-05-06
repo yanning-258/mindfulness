@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Header from '../components/Header'
 import ScoreChart from '../components/ScoreChart'
-import JournalPanel from '../components/JournalPanel'
+import ActivitiesPanel from '../components/ActivitiesPanel'
 import API from '../api'
 
 const AVATAR_COLORS = ['#7c3aed', '#2563eb', '#059669', '#dc2626', '#d97706']
@@ -16,8 +16,6 @@ export default function StudentProfile() {
   const { id } = useParams()
   const [profile,  setProfile]  = useState(null)
   const [scores,   setScores]   = useState([])
-  const [entries,  setEntries]  = useState([])
-  const [moods,    setMoods]    = useState([])
   const [loading,  setLoading]  = useState(true)
 
   useEffect(() => {
@@ -25,10 +23,8 @@ export default function StudentProfile() {
     Promise.all([
       fetch(`${API}/student/${id}`).then(r => r.json()),
       fetch(`${API}/student/${id}/scores`).then(r => r.json()),
-      fetch(`${API}/student/${id}/journal`).then(r => r.json()),
-      fetch(`${API}/student/${id}/mood`).then(r => r.json()),
     ])
-      .then(([p, s, e, m]) => { setProfile(p); setScores(s); setEntries(e); setMoods(m) })
+      .then(([p, s]) => { setProfile(p); setScores(s) })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [id])
@@ -104,7 +100,7 @@ export default function StudentProfile() {
         {/* Chart + Journal */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <ScoreChart scores={scores} />
-          <JournalPanel entries={entries} moods={moods} />
+          <ActivitiesPanel studentId={id} />
         </div>
       </div>
     </div>

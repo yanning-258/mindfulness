@@ -61,6 +61,7 @@ class CounsellingSession(BaseModel):
     time: str
     venue: str
     student_id: int
+    student_name: str
 
 
 @router.get("/stats", response_model=StatsResponse)
@@ -106,6 +107,6 @@ def get_students(db: Session = Depends(get_db)):
 @router.get("/sessions", response_model=List[CounsellingSession])
 def get_sessions():
     return [
-        CounsellingSession(date="April 20 2026", time="14:00", venue="LCBS 300", student_id=1),
-        CounsellingSession(date="April 22 2026", time="16:30", venue="LCBS 300", student_id=1),
+        CounsellingSession(date="April 20 2026", time="14:00", venue="LCBS 300", student_id=1, student_name="Angela Beckett"),
+        CounsellingSession(date="April 22 2026", time="16:30", venue="LCBS 300", student_id=2, student_name="Ben Robertson"),
     ]

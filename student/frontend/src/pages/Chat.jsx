@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
 import API from '../api'
 
 const OPENING = { id: 'open', sender: 'mia', text: 'Hi Angela! How are you today? 😊' }
@@ -34,7 +35,42 @@ function Bubble({ msg }) {
             ? 'bg-purple-500 text-white rounded-br-sm'
             : 'bg-white border border-gray-100 text-gray-700 rounded-bl-sm shadow-sm'}`}
       >
-        {msg.text}
+        {isStudent ? (
+          msg.text
+        ) : (
+          <>
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                a: ({ href, children }) => (
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="text-purple-600 underline break-all">
+                    {children}
+                  </a>
+                ),
+                strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+              }}
+            >
+              {msg.text}
+            </ReactMarkdown>
+            {msg.resource && (
+              <div className="mt-2 pt-2 border-t border-gray-100">
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="mb-1 last:mb-0">{children}</p>,
+                    a: ({ href, children }) => (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className="text-purple-600 underline break-all">
+                        {children}
+                      </a>
+                    ),
+                    strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                  }}
+                >
+                  {msg.resource}
+                </ReactMarkdown>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   )
@@ -72,7 +108,12 @@ export default function Chat() {
         body: JSON.stringify({ message: text, history }),
       })
       const data = await res.json()
-      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'mia', text: data.reply }])
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        sender: 'mia',
+        text: data.reply,
+        resource: data.resource || null,
+      }])
     } catch {
       setMessages(prev => [...prev, {
         id: Date.now() + 1,

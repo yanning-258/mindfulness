@@ -78,7 +78,7 @@ export default function JournalMore() {
         <div className="grid grid-cols-3 gap-4">
           <StatCard value={entries.length} label="Total entries" icon="📝" />
           <StatCard value={totalWords.toLocaleString()} label="Words written" icon="✍️" />
-          <StatCard value={streak} label={`Day streak${streak === 1 ? '' : 's'}`} icon="🔥" />
+          <StatCard value={streak} label={`Journal day${streak === 1 ? '' : 's'} in a row`} icon="📓" />
         </div>
 
         {/* Entries list */}
